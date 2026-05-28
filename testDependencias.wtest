@@ -1,0 +1,75 @@
+import rodados.*
+
+describe "Test etapa 1 con 2 dependencias" {
+    const deportes = new Dependencia(empleados=45)
+    const cultura = new Dependencia(empleados=31)
+    var cachito = new Corsa(color="rojo")
+    const pedido1 = new Pedido(
+        distancia=960, 
+        tiempoMaximo=8, 
+        cantidadPasajeros=4)
+
+    method initialize() {
+        deportes.agregar(cachito)
+        deportes.agregar(new Corsa(color="azul"))
+        deportes.agregar(new Corsa(color="verde"))
+        deportes.agregar(new Kwid(tieneTanqueAdicional = true))
+        deportes.agregar(new AutoEspecial(
+            capacidad=5,
+            velocidad=160,
+            peso=1200,
+            color="beige"
+        ))
+        cultura.agregar(cachito)
+        cultura.agregar(new Kwid(tieneTanqueAdicional = true))
+        cultura.agregar(new Kwid(tieneTanqueAdicional = true))
+        cultura.agregar(new Kwid(tieneTanqueAdicional = false))
+        cultura.agregar(trafic)
+        trafic.cambiarInterior(popular)
+        trafic.cambiarMotor(bataton)
+        pedido1.agregarColoresIncompatibles("azul")
+        pedido1.agregarColoresIncompatibles("negro")
+    }
+
+    test "Deportes tiene un peso total de 6450" {
+        assert.equals(1300*3+1350+1200,deportes.pesoTotalFlota())
+    }
+
+    test "Cultura tiene un peso total de 10700" {
+        assert.equals(1300+1350*2+1200+5500,cultura.pesoTotalFlota())
+    }
+
+    test "Capacidad faltante de deportes es 25" {
+        assert.equals(25, deportes.capacidadFaltante())
+    }
+
+    test "Capacidad faltante de cultura es 5" {
+        assert.equals(5, cultura.capacidadFaltante())
+    }
+
+    test "Cachito puede satisfacer pedido de 960km de 8hs para 4 pasajeros" {
+        assert.that(pedido1.puedeSatisfacerlo(cachito))
+    }
+
+    test "Cachito no puede satisfacer pedido de 960km de 8hs para 6 pasajeros" {
+        pedido1.cambiarCantidadPasajeros(6)
+        assert.notThat(pedido1.puedeSatisfacerlo(cachito))
+    }
+
+    test "Cachito no puede satisfacer pedido de 960km de 8hs para 4 pasajeros por color incompatible" {
+        pedido1.agregarColoresIncompatibles("rojo")
+        assert.notThat(pedido1.puedeSatisfacerlo(cachito))
+    }
+
+    
+
+
+
+
+
+
+
+
+
+
+}
